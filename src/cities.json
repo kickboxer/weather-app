@@ -3,12 +3,12 @@
     "title": "Minsk",
     "location_type": "City",
     "woeid": 834463,
-    "latt_long": "27.5631,53.9025"
+    "latt_long": "53.9025,27.5631"
   },
   {
     "title": "Kiev",
     "location_type": "City",
     "woeid": 924938,
-    "latt_long": "30.5225,50.4414"
+    "latt_long": "50.4414,30.5225"
   }
 ]
