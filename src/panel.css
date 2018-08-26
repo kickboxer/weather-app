@@ -7,7 +7,7 @@
   position: relative;
  }
 
-.panel .panel-front {
+.panel .front {
   backface-visibility: hidden;
   border-radius: 8px;
   box-shadow: 0 1px 8px rgba(0,0,0,0.4);
@@ -20,11 +20,11 @@
   width: 100%;
 }
 
-.panel.flip .panel-front {
+.panel.flip .front {
   transform: rotateY(179deg);
 }
 
-.panel .panel-back {
+.panel .back {
   position: absolute;
   top: 0;
   left: 0;
@@ -35,7 +35,7 @@
   backface-visibility: hidden;
   transition: all .4s ease-in-out;
 }
-.panel.flip .panel-back {
+.panel.flip .back {
   transform: rotateX(0) rotateY(0);
   box-shadow: 0 15px 50px rgba(0,0,0,0.2);
 }
