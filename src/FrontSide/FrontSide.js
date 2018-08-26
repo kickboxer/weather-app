@@ -1,30 +1,78 @@
 import React, { Component } from 'react';
-import './card.css';
-import optionsImage from './options.svg';
+import { func, shape, number, string } from "prop-types";
+import moment from 'moment';
+import FrontSideView from './FrontSideView';
+import { getWeatherForLocation } from '../api';
+import Loader from './Loader';
 
 export default class FrontSide extends Component {
+  static propTypes = {
+    onClick: func,
+    city: shape({
+      woeid: number.isRequired,
+      title: string.isRequired
+    })
+  };
+
+  state = { currentWeather: null, date: moment(), prevCityId: null };
+
+  componentDidMount() {
+    this.updateWeather();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.currentWeather) {
+      return;
+    }
+    this.updateWeather();
+  }
+
+  updateWeather() {
+    getWeatherForLocation(this.props.city).then(weather => {
+      this.setState({ currentWeather: weather.currently });
+    });
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.city.woeid !== prevState.prevCityId) {
+      return {
+        prevCityId: nextProps.city.woeid,
+        currentWeather: null
+      };
+    }
+
+    return null;
+  }
+
   render() {
+    if (!this.state.currentWeather) {
+      return <Loader />;
+    }
+
+    const {
+      state: {
+        currentWeather: {
+          summary,
+          icon,
+          temperature,
+          apparentTemperature,
+        },
+        date,
+      },
+      props: {
+        city,
+      },
+    } = this;
     return (
-      <div className="card is-clear-day">
-        <div className="card-row">
-          <div>Sunday</div>
-          <div>Aug 28</div>
-        </div>
-        <img src='/icons/clear-day.svg' alt='clear-day' />
-        <div className="card-row">
-          <div className="card-temperature">19
-            <span className="small">15</span>
-          </div>
-          <div className="card-weather">Sunny</div>
-        </div>
-        <div className="card-line" />
-        <div className="card-row">
-          <div className="card-city">Minsk</div>
-          <button>
-            <img src={optionsImage} width={32} alt='options' />
-          </button>
-        </div>
-      </div>
+      <FrontSideView
+        summary={summary}
+        icon={icon}
+        temperature={temperature}
+        apparentTemperature={apparentTemperature}
+        date={date}
+        currentCityTitle={city.title}
+        onClick={this.props.onClick}
+      />
     );
   }
 };
